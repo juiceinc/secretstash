@@ -1,3 +1,5 @@
+"""Setup secretstash."""
+
 from setuptools import find_packages, setup
 
 requirements = ['credstash', 'toml']
