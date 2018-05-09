@@ -12,7 +12,9 @@ def dotted_get(obj, name):
     parts = name.split('.')
     cur = obj
     for part in parts:
-        cur = cur[part]
+        cur = cur.get(part, None)
+        if cur is None:
+            return
     return cur
 
 
@@ -25,8 +27,8 @@ class SecretStash(object):
         try:
             with open(self.local_filename) as f:
                 data = toml.loads(f.read())
-                dotted_get(data, name)
-        except IOError
+                return dotted_get(data, name)
+        except IOError:
             pass
 
     def get_secret(self, name, context):
