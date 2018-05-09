@@ -5,7 +5,7 @@ See get_secret
 import toml
 from credstash import getSecret
 
-__all__ = ['get_secret']
+__all__ = ['SecretStash']
 
 
 def dotted_get(obj, name):
