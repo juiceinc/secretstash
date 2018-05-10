@@ -1,9 +1,15 @@
 """See SecretStash."""
 
+import credstash
 import toml
-from credstash import getSecret
 
-__all__ = ['SecretStash']
+__all__ = ['SecretStash', 'ItemNotFound']
+
+
+class ItemNotFound(Exception):
+    def __init__(self, name):
+        self.name = name
+        super(ItemNotFound, self).__init__('Item not found: {}'.format(name))
 
 
 def dotted_get(obj, name):
@@ -49,6 +55,10 @@ class SecretStash(object):
         """
         secret = self.get_local(name)
         if secret is None:
-            return getSecret(name, region=self.region, context=context)
+            try:
+                return credstash.getSecret(
+                    name, region=self.region, context=context)
+            except credstash.ItemNotFound:
+                raise ItemNotFound(name)
         else:
             return secret
