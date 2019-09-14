@@ -42,6 +42,10 @@ jobs:
         BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
         echo "Branch is $BRANCH"
         echo "Base is $BASE"
+        echo "Let's try merge-base:"
+        git merge-base $BRANCH $BASE
+        echo "and now git diff"
+        git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE)
         MODIFIED_FILES=$(git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE))
         echo "modified files are $MODIFIED_FILES"
         black --target-version=py27 $MODIFIED_FILES
