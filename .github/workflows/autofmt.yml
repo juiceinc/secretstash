@@ -7,20 +7,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
+
+    - name: get the code
+      run: |
+        REPO_FULLNAME=$(jq -r ".repository.full_name" "$GITHUB_EVENT_PATH")
+        echo "## Initializing git repo..."
+        git init
+        echo "### Adding git remote..."
+        git remote add origin https://x-access-token:$GITHUB_TOKEN@github.com/$REPO_FULLNAME.git
+        echo "### git fetch..."
+        git fetch
+        echo "### Setting branch"
+        BRANCH=$(basename $GITHUB_REF)
+        echo "### Branch: $BRANCH"
+        git checkout $BRANCH
+
     - name: auto-format with black
       run: |
         pip install black
         # TODO: figure out how to only run this on .py files that have changed IN the PR
         black --target-version=py27 secretstash
+
     - name: commit changes back to PR
       run: |
-        git config user.email 'radix@twistedmatrix.com'
-        git config user.name "Christopher Armstrong"
+        git config user.email '227068+radix@users.noreply.github.com'
+        git config user.name "radix's formatting bot"
         git add .
         git commit -m 'auto-format Python code'
         git push
