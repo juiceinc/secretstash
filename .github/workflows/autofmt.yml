@@ -1,0 +1,25 @@
+name: format python code with `black`
+
+on:
+  pull_request:
+    paths: ['*.py']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: auto-format with black
+      run: |
+        pip install black
+        # TODO: figure out how to only run this on .py files that have changed IN the PR
+        black --target-version=py27
+    - name: commit changes back to PR
+      run: |
+        git commit -m 'auto-format Python code'
+        git push
