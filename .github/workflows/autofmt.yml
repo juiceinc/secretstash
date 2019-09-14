@@ -13,6 +13,8 @@ jobs:
         python-version: 3.7
 
     - name: get the code
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         REPO_FULLNAME=$(jq -r ".repository.full_name" "$GITHUB_EVENT_PATH")
         echo "## Initializing git repo..."
