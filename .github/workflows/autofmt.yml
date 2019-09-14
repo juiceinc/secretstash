@@ -19,6 +19,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        set -e
         REPO_FULLNAME=$(jq -r ".repository.full_name" "$GITHUB_EVENT_PATH")
         echo "## Initializing git repo..."
         git init
@@ -33,17 +34,21 @@ jobs:
 
     - name: auto-format with black
       run: |
+        set -e
         pip install black
         # TODO: figure out how to only run this on .py files that have changed IN the PR
         echo "### Figuring out modified .py files"
         BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
         BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
+        echo "Branch is $BRANCH"
+        echo "Base is $BASE"
         MODIFIED_FILES=$(git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE))
-        echo $MODIFIED_FILES
+        echo "modified files are $MODIFIED_FILES"
         black --target-version=py27 $MODIFIED_FILES
 
     - name: commit changes back to PR
       run: |
+        set -e
         git config user.email '227068+radix@users.noreply.github.com'
         git config user.name "radix's formatting bot"
         git add .
