@@ -13,6 +13,9 @@ jobs:
         python-version: 3.7
 
     - name: get the code
+      # Instead of using the built-in "checkout" action, we have to do this manually so
+      # that we actually check out the *branch* and not just a detached HEAD. This is
+      # so we can push back to that branch later.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -32,7 +35,12 @@ jobs:
       run: |
         pip install black
         # TODO: figure out how to only run this on .py files that have changed IN the PR
-        black --target-version=py27 secretstash
+        echo "### Figuring out modified .py files"
+        BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
+        BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
+        MODIFIED_FILES=$(git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE))
+        echo $MODIFIED_FILES
+        black --target-version=py27 $MODIFIED_FILES
 
     - name: commit changes back to PR
       run: |
@@ -40,8 +48,7 @@ jobs:
         git config user.name "radix's formatting bot"
         git add .
         git commit -m 'auto-format Python code'
-        # some debugging:
-        git branch
-        git remote -v
-        # end debugging
+        # Apparently github has some sort of loop-detection,
+        # so it won't recursively run this workflow when this
+        # is pushed, fortunately!
         git push
