@@ -19,5 +19,7 @@ jobs:
         black --target-version=py27 secretstash
     - name: commit changes back to PR
       run: |
+        git config user.email 'radix@twistedmatrix.com'
+        git config user.name "Christopher Armstrong"
         git commit -m 'auto-format Python code'
         git push
