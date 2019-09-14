@@ -51,6 +51,12 @@ jobs:
         set -e
         git config user.email '227068+radix@users.noreply.github.com'
         git config user.name "radix's formatting bot"
+
+        if git diff --exit-code; then
+          echo "No changes to commit."
+          exit
+        fi
+
         git add .
         git commit -m 'auto-format Python code'
         # Apparently github has some sort of loop-detection,
