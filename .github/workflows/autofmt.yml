@@ -26,7 +26,7 @@ jobs:
         echo "### Adding git remote..."
         git remote add origin https://x-access-token:$GITHUB_TOKEN@github.com/$REPO_FULLNAME.git
         echo "### git fetch..."
-        git fetch
+        git fetch --all
         echo "### Setting branch"
         BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
         echo "### Branch: $BRANCH"
@@ -42,6 +42,8 @@ jobs:
         BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
         echo "Branch is $BRANCH"
         echo "Base is $BASE"
+        echo "`git branch`:"
+        git branch
         echo "Let's try merge-base:"
         git merge-base $BRANCH $BASE
         echo "and now git diff"
