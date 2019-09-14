@@ -14,8 +14,6 @@ jobs:
 
     - name: get the code
       run: |
-        echo "Here's the event:"
-        cat "$GITHUB_EVENT_PATH"
         REPO_FULLNAME=$(jq -r ".repository.full_name" "$GITHUB_EVENT_PATH")
         echo "## Initializing git repo..."
         git init
@@ -40,4 +38,5 @@ jobs:
         git config user.name "radix's formatting bot"
         git add .
         git commit -m 'auto-format Python code'
-        git push
+        echo "Does $BRANCH still exist?"
+        git push origin $BRANCH
