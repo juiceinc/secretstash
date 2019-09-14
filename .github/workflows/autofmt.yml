@@ -38,5 +38,8 @@ jobs:
         git config user.name "radix's formatting bot"
         git add .
         git commit -m 'auto-format Python code'
-        echo "Does $BRANCH still exist?"
-        git push origin $BRANCH
+        # some debugging:
+        git branch
+        git remote -v
+        # end debugging
+        git push
