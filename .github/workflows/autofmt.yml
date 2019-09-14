@@ -21,5 +21,6 @@ jobs:
       run: |
         git config user.email 'radix@twistedmatrix.com'
         git config user.name "Christopher Armstrong"
+        git add .
         git commit -m 'auto-format Python code'
         git push
