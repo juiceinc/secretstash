@@ -1,4 +1,4 @@
-name: format python code with `black`
+name: Format python code with Black
 
 on: [pull_request]
 
@@ -12,7 +12,7 @@ jobs:
       with:
         python-version: 3.7
 
-    - name: get the code
+    - name: Checkout
       # Instead of using the built-in "checkout" action, we have to do this manually so
       # that we actually check out the *branch* and not just a detached HEAD. This is
       # so we can push back to that branch later.
@@ -34,27 +34,19 @@ jobs:
         git checkout $BASE
         git checkout $BRANCH
 
-    - name: auto-format with black
+    - name: Auto-format with Black
       run: |
         set -e
         pip install black
-        echo "### Figuring out modified .py files"
+        echo "### Figuring out which .py files were modified"
         BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
         BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
-        echo "## Fetching $BASE"
-        echo "Branch is $BRANCH"
-        echo "Base is $BASE"
-        echo "git branch:"
-        git branch
-        echo "Let's try merge-base:"
-        git merge-base $BRANCH $BASE
-        echo "and now git diff"
-        git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE)
         MODIFIED_FILES=$(git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE) | grep '\.py$')
         echo "modified files are $MODIFIED_FILES"
+        echo "### Running black"
         black --target-version=py27 $MODIFIED_FILES
 
-    - name: commit changes back to PR
+    - name: Commit changes back to PR
       run: |
         set -e
         git config user.email '227068+radix@users.noreply.github.com'
