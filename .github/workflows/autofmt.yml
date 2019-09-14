@@ -50,7 +50,7 @@ jobs:
         git merge-base $BRANCH $BASE
         echo "and now git diff"
         git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE)
-        MODIFIED_FILES=$(git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE))
+        MODIFIED_FILES=$(git diff --name-only $BRANCH $(git merge-base $BRANCH $BASE) | grep '\.py$')
         echo "modified files are $MODIFIED_FILES"
         black --target-version=py27 $MODIFIED_FILES
 
