@@ -40,9 +40,11 @@ jobs:
         echo "### Figuring out modified .py files"
         BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
         BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
+        echo "## Fetching $BASE"
+        git fetch origin $BASE
         echo "Branch is $BRANCH"
         echo "Base is $BASE"
-        echo "`git branch`:"
+        echo "git branch:"
         git branch
         echo "Let's try merge-base:"
         git merge-base $BRANCH $BASE
