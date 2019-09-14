@@ -14,6 +14,8 @@ jobs:
 
     - name: get the code
       run: |
+        echo "Here's the event:"
+        cat "$GITHUB_EVENT_PATH"
         REPO_FULLNAME=$(jq -r ".repository.full_name" "$GITHUB_EVENT_PATH")
         echo "## Initializing git repo..."
         git init
