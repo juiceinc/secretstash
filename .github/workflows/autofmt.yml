@@ -16,7 +16,7 @@ jobs:
       run: |
         pip install black
         # TODO: figure out how to only run this on .py files that have changed IN the PR
-        black --target-version=py27
+        black --target-version=py27 secretstash
     - name: commit changes back to PR
       run: |
         git commit -m 'auto-format Python code'
