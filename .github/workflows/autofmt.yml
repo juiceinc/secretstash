@@ -1,8 +1,6 @@
 name: format python code with `black`
 
-on:
-  pull_request:
-    paths: ['*.py']
+on: [pull_request]
 
 jobs:
   build:
