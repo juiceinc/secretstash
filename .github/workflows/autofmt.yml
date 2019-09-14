@@ -29,19 +29,19 @@ jobs:
         git fetch --all
         echo "### Setting branch"
         BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
-        echo "### Branch: $BRANCH"
+        BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
+        echo "### Branches: $BASE and $BRANCH"
+        git checkout $BASE
         git checkout $BRANCH
 
     - name: auto-format with black
       run: |
         set -e
         pip install black
-        # TODO: figure out how to only run this on .py files that have changed IN the PR
         echo "### Figuring out modified .py files"
         BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
         BASE=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
         echo "## Fetching $BASE"
-        git fetch origin $BASE
         echo "Branch is $BRANCH"
         echo "Base is $BASE"
         echo "git branch:"
