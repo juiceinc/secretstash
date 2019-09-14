@@ -3,7 +3,6 @@
 import credstash
 import toml
 
-
 __all__ = ['SecretStash', 'ItemNotFound']
 
 
