@@ -3,13 +3,13 @@
 import credstash
 import toml
 
-__all__ = ['SecretStash', 'ItemNotFound']
+__all__ = ["SecretStash", "ItemNotFound"]
 
 
 class ItemNotFound(Exception):
     def __init__(self, name):
         self.name = name
-        super(ItemNotFound, self).__init__('Item not found: {}'.format(name))
+        super(ItemNotFound, self).__init__("Item not found: {}".format(name))
 
 
 def dotted_get(obj, name):
@@ -19,7 +19,7 @@ def dotted_get(obj, name):
     Given a nested dictionary like `{'a': {'b': 'c'}}` and a string "a.b",
     return "c".
     """
-    parts = name.split('.')
+    parts = name.split(".")
     cur = obj
     for part in parts:
         cur = cur.get(part, None)
@@ -56,8 +56,7 @@ class SecretStash(object):
         secret = self.get_local(name)
         if secret is None:
             try:
-                return credstash.getSecret(
-                    name, region=self.region, context=context)
+                return credstash.getSecret(name, region=self.region, context=context)
             except credstash.ItemNotFound:
                 raise ItemNotFound(name)
         else:
